@@ -1,0 +1,60 @@
+
+import speech_recognition as sr
+import pyttsx3
+import datetime
+import webbrowser
+
+engine = pyttsx3.init()
+engine.setProperty("rate", 160)
+
+def speak(text):
+    print("JARVIS:", text)
+    engine.say(text)
+    engine.runAndWait()
+
+def listen():
+    recognizer = sr.Recognizer()
+
+    with sr.Microphone() as source:
+        print("JARVIS is listening...")
+        recognizer.adjust_for_ambient_noise(source)
+        audio = recognizer.listen(source)
+
+    try:
+        return recognizer.recognize_google(
+            audio, language="hi-IN"
+        ).lower()
+    except:
+        return ""
+
+def run_jarvis():
+    speak("Hello Sir. JARVIS is online.")
+
+    while True:
+        command = listen()
+        print("You:", command)
+
+        if "hello jarvis" in command or "हेलो जार्विस" in command:
+            speak("Hello Sir! How can I help you?")
+
+        elif "समय" in command or "time" in command:
+            now = datetime.datetime.now()
+            speak("Sir, time is " + now.strftime("%I:%M %p"))
+
+        elif "यूट्यूब" in command:
+            speak("Opening YouTube Sir")
+            webbrowser.open("https://youtube.com")
+
+        elif "गूगल" in command:
+            speak("Opening Google Sir")
+            webbrowser.open("https://google.com")
+
+        elif "बंद हो जाओ" in command:
+            speak("Goodbye Sir")
+            break
+
+        elif command:
+            speak("Sorry Sir, I am learning this command.")
+
+if __name__ == "__main__":
+    run_jarvis()
